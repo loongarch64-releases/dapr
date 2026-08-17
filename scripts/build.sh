@@ -31,7 +31,15 @@ prepare()
     sed -i '/else ifeq (\$(shell echo \$(LOCAL_ARCH) | head -c 7),aarch64)/i\
 else ifeq ($(shell echo $(LOCAL_ARCH) | head -c 11),loongarch64)\
 	TARGET_ARCH_LOCAL=loong64' "${SRCS}/${VERSION}/Makefile"
-    
+
+    # 该项目需要的 go 版本一般都是最新的，所以直接下载上游的包
+    local GO_VER=$(awk '$1 == "go" { print $2; exit }' "${SRCS}/${VERSION}/go.mod")
+    local GO_HOME="/usr/local/go"
+    export PATH="${GO_HOME}/bin:${PATH}"
+    wget -O /tmp/go.tar.gz "https://golang.google.cn/dl/go${GO_VER}.linux-loong64.tar.gz"
+    mkdir -p "${GO_HOME}"
+    tar -xzf /tmp/go.tar.gz -C "${GO_HOME}" --strip-components=1
+
     echo "✅ [Prepare] Environment ready."
 }
 

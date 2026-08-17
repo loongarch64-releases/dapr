@@ -1,8 +1,10 @@
-FROM lcr.loongnix.cn/library/golang:1.26
+FROM lcr.loongnix.cn/library/debian:unstable-slim
 
 RUN apt-get update && apt-get install -y \
     ca-certificates \
     git \
+    wget \
+    build-essential \
     && rm -rf /var/lib/apt/lists/*
 
 CMD ["/bin/bash"]
